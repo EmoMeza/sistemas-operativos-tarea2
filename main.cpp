@@ -71,14 +71,15 @@ void procesarArchivoGenoma(const std::string& rutaArchivo, double umbralCG, int 
 }
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        std::cerr << "Uso: " << argv[0] << " <directorio> <modo: 1 (Semaforos) | 2 (Mutex)>" << std::endl;
+    if (argc != 4) {
+        std::cerr << "Uso: " << argv[0] << " <directorio> <valor umbral> <modo: 1 (Semaforos) | 2 (Mutex)>" << std::endl;
         return 1;
     }
 
     std::string directorioGenomas = argv[1];
-    int modo = std::stoi(argv[2]);
-    const double umbralCG = 0.60; //! Umbral del contenido de CG
+    double umbralCG = std::stod(argv[2]); 
+    int modo = std::stoi(argv[3]); 
+
     std::vector<std::thread> hilos;
 
     for (const auto& entrada : std::filesystem::directory_iterator(directorioGenomas)) {
@@ -91,7 +92,6 @@ int main(int argc, char* argv[]) {
         hilo.join();
     }
 
-    // Procesar la cola según el modo
     if (modo == 1) {
         while (!colaGenomasSemaforo.empty()) {
             auto& [nombreArchivo, contenidoCG] = colaGenomasSemaforo.front();

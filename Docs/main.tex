@@ -1,0 +1,374 @@
+% Template:     Informe LaTeX
+% Documento:    Archivo principal
+% Versión:      8.2.4 (29/04/2023)
+% Codificación: UTF-8
+%
+% Autor: Pablo Pizarro R.
+%        pablo@ppizarror.com
+%
+% Manual template: [https://latex.ppizarror.com/informe]
+% Licencia MIT:    [https://opensource.org/licenses/MIT]
+
+% CREACIÓN DEL DOCUMENTO
+\documentclass[
+	spanish, % Idioma: spanish, english, etc.
+	oneside
+]{article}
+
+% INFORMACIÓN DEL DOCUMENTO
+\def\documenttitle {Tarea 1}
+\def\documentsubtitle {GridWorld}
+\def\documentsubject {Aprendizaje por Refuerzo - GridWorld}
+
+\def\documentauthor {Artigues}
+\def\coursename {Aprendizaje por Refuerzo}
+\def\coursecode {503650}
+
+\def\universityname {Universidad de Concepción}
+\def\universityfaculty {Facultad de Ingeniería}
+\def\universitydepartment {Departamento de Informática y Ciencias de la Computación}
+\def\universitydepartmentimage {departamentos/fiudec2}
+\def\universitydepartmentimagecfg {height=1.57cm}
+\def\universitylocation {Concepción, Chile}
+
+% INTEGRANTES, PROFESORES Y FECHAS
+\def\authortable {
+	\begin{tabular}{ll}
+		Integrante:
+		& \begin{tabular}[t]{l}
+			Roberto Felipe Artigues Escobar \\
+		\end{tabular} \\ & \\
+		Profesor:
+		& \begin{tabular}[t]{l}
+			Julio Godoy
+		\end{tabular} \\
+		% Auxiliar:
+		% & \begin{tabular}[t]{l}
+		% 	Auxiliar 1
+		% \end{tabular} \\
+		% Ayudantes:
+		% & \begin{tabular}[t]{l}
+		% 	Ayudante 1 \\
+		% 	Ayudante 2
+		% \end{tabular} \\
+		% \multicolumn{2}{l}{Ayudante de laboratorio: Ayudante 1} \\
+		& \\
+		% \multicolumn{2}{l}{Fecha de realización: \today} \\
+		\multicolumn{2}{l}{Fecha de entrega: 12 de Noviembre de 2023} \\
+		\multicolumn{2}{l}{\universitylocation}
+	\end{tabular}
+}
+
+\DeclareUnicodeCharacter{0301}{*************************************}
+
+% IMPORTACIÓN DEL TEMPLATE
+\input{template}
+
+% INICIO DE PÁGINAS
+\begin{document}
+
+% PORTADA
+\templatePortrait
+
+% CONFIGURACION DE PÁGINA Y ENCABEZADOS
+\templatePagecfg
+
+% RESUMEN O ABSTRACT
+% \begin{abstractd}
+% 	% \lipsum[1] % Párrafo ejemplo, se puede borrar
+% 	Se realizó un trabajo experimental en el cual se aplicaron cargas de distintos pesos a una armadura de tipo Warren. Durante el proceso, se midieron los valores de deformación utilizando un medidor de deformaciones y se mantuvieron registrados mientras se mantenían las cargas aplicadas. \\ \\
+% 	A continuación, se multiplicaron los valores obtenidos por la constante 𝛼 con el fin de obtener los valores de fuerza correspondientes. Además, se pudo determinar si las barras de la armadura estaban sometidas a tracción o compresión.
+% 	\\ \\
+% 	Los objetivos del trabajo fueron:  
+% 	\begin{itemize}
+% 		\item Estudiar el equilibrio de fuerzas en una estructura.
+% 		\item Medir fuerza axial en miembros estructurales.
+% 		\item Hacer una breve descripción del banco de ensayos, condiciones de carga.
+% 		\item Indicar el diagrama de cuerpo libre de la armadura.
+% 		\item Realizar una comparación y discusión de los resultados.
+% 	\end{itemize}
+
+% 	\noindent Con respecto a los resultados obtenidos no fueron los esperados, tanto en magnitud de fuerzas como en estados de carga. 
+% 	Esto pudo haber ocurrido por fallos en los materiales o por errores al momento de medir las cargas. \\
+
+% 	\noindent En conclusión, es posible afirmar que el análisis teórico solo representa una aproximación a la realidad y no tiene en cuenta todos 
+% 	los factores que podrían influir en los resultados de la experimentación en condiciones reales, por lo tanto, cabe la posibilidad 
+% 	de que los resultados del análisis teórico y experimental no sean iguales.
+	 
+
+% \end{abstractd}
+
+% TABLA DE CONTENIDOS - ÍNDICE
+% \templateIndex
+
+% CONFIGURACIONES FINALES
+\templateFinalcfg
+
+% ======================= INICIO DEL DOCUMENTO =======================
+
+\section*{Instrucciones de ejecución del código}
+
+Todo el código correspondiente a la tarea se encuentra en la carpeta \textbf{GridWorldEnvs}. Paso por paso se tiene que hacer lo siguiente:
+
+\begin{enumerate}
+	\item Abrir una terminal en la carpeta \textbf{GridWorldEnvs}.
+	\item Ejecutar el comando "\textbf{pip install -e .}" \space para instalar las dependencias.
+	\item Ejecutar el comando "\textbf{python tarea1.py}" \space para ejecutar el código.
+\end{enumerate}
+
+\noindent La razón por la cual se incluye la carpeta completa de \textbf{GridWorldEnvs} es porque se modificaron varios archivos de la librería original. \\
+
+\noindent Al final del código hay varias secciones comentadas, las cuales se pueden descomentar para ejecutar los experimentos requeridos para responder cada pregunta. \\
+
+\vspace*{12pt}
+\hrule height 0.1pt 
+\vspace*{20pt}
+
+\noindent También se incluye el archivo \textbf{plotter.py} para graficar los resultados obtenidos. Para ejecutarlo, se debe hacer lo siguiente:
+
+\begin{enumerate}
+	\item Descargar matplotlib con el comando "\textbf{pip install matplotlib}".
+	\item Ejecutar el comando "\textbf{python plotter.py}" \space para obtener los gráficos.
+\end{enumerate}
+
+\noindent Los gráficos se crean usando los archivos de rewards en la carpeta \textbf{GridWorldEnvs/Rewards}. Se tiene que especificar el archivo a usar en el código del programa. \\
+
+\newpage
+\section*{Pregunta 1}
+
+\noindent A continuación se muestran los resultados obtenidos con SARSA y Q-learning para el Map1. 
+\\ \\ 
+\indent{\textbf{Resultados con Map1:}}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.96\textwidth]{img/SarsaDefault1.png}
+	\caption{Resultados con SARSA para Map1}
+	\label{fig:map1_sarsa}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.96\textwidth]{img/QlearningDefault1.png}
+	\caption{Resultados con Q-learning para Map1}
+	\label{fig:map1_qlearning}
+\end{figure}
+
+
+\newpage
+\indent{\textbf{Resultados con Map2:}}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{img/SarsaDefault2.png}
+	\caption{Resultados con SARSA para Map2}
+	\label{fig:map2_sarsa}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{img/QlearningDefault2.png}
+	\caption{Resultados con Q-learning para Map2}
+	\label{fig:map2_qlearning}
+\end{figure}
+
+\noindent Con los parámetros originales no es posible que el agente aprenda a llegar al objetivo en Map2, ya que el agente se queda dando vueltas en el mapa sin llegar al objetivo. \\
+
+
+\indent{\textbf{Resultados con Map2 y parametros modificados:}}
+\\
+
+\noindent Los valores que se utilizaron en los parámetros para los resultados de la Figura \ref{fig:map2_sarsa_modified} y la Figura \ref{fig:map2_qlearning_modified} se muestran en la Tabla \ref{tab:my-table}.
+\\
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \rowcolor[HTML]{C0C0C0} 
+        \textbf{Parámetro} & \textbf{Original} & \multicolumn{2}{c|}{\textbf{Modificado}} \\ \hline
+        \textbf{MAX\_STEPS} & 100 & \multicolumn{2}{c|}{200} \\ \hline
+        \textbf{LEARNING\_RATE} & 0.2 & \multicolumn{2}{c|}{0.1} \\ \hline
+        \textbf{GAMMA} & 0.9 & 0.95 & 1 \\ \hline
+        \textbf{EPSILON} & 1 & \multicolumn{2}{c|}{1} \\ \hline
+    \end{tabular}
+    \caption{Valores de parámetros utilizados}
+    \label{tab:my-table}
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{img/SarsaModified2g095.png}
+	\caption{Resultados con SARSA para Map2 con gamma = 0.95}
+	\label{fig:map2_sarsa_modified}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{img/QlearningModified2g095.png}
+	\caption{Resultados con Q-learning para Map2 con gamma = 0.95}
+	\label{fig:map2_qlearning_modified}
+\end{figure}
+
+\noindent Al menos SARSA no siempre encontraba la solución óptima. En cambio, Q-learning siempre encontraba la solución óptima usando los parámetros modificados. \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{img/SarsaModified2g1.png}
+	\caption{Resultados con SARSA para Map2 con gamma = 1}
+	\label{fig:map2_sarsa_modified2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{img/QlearningModified2g1.png}
+	\caption{Resultados con Q-learning para Map2 con gamma = 1}
+	\label{fig:map2_qlearning_modified2}
+\end{figure}
+
+\noindent La modificación de los parámetros tuvo un impacto significativo en el desempeño de los algoritmos SARSA y Q-learning en el Map2. Con un valor de \textbf{gamma} igual a 0.95, se observó que SARSA no siempre encontraba la solución óptima. Por otro lado, Q-learning mostró una mejora notable, encontrando consistentemente la solución óptima.
+
+\vspace*{12pt}
+\noindent Al incrementar el valor de \textbf{gamma} a 1, se intensifica la importancia de las recompensas futuras. Por lo que ambos algoritmos deciden tomar el camino más corto hacia el objetivo, sin importar las recompensas que se obtengan en el camino. \\
+
+\newpage
+
+\section*{Pregunta 2}
+
+Para el entrenamiento, se volvieron a utilizar los parámetros modificados, específicamente utilizando \textbf{gamma} = 1. \\
+
+\indent\textbf{Q-learning determinístico vs estocástico}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/QlearningModified2g1.png}
+	\caption{Resultados Q-learning determinístico para Map2 con gamma = 1}
+	\label{fig:map2_qlearning_modified22}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/QlearningStochastic2g1.png}
+	\caption{Resultados Q-learning estocástico para Map2 con gamma = 1}
+	\label{fig:map2_qlearning_stochastic}
+\end{figure}
+
+
+\indent\textbf{SARSA determinístico vs estocástico}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/SarsaModified2g1.png}
+	\caption{Resultados SARSA determinístico para Map2 con gamma = 1}
+	\label{fig:map2_sarsa_modified22}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/SarsaStochastic2g1.png}
+	\caption{Resultados SARSA estocástico para Map2 con gamma = 1}
+	\label{fig:map2_sarsa_stochastic}
+\end{figure}
+
+\newpage
+\noindent Ambos algoritmos, SARSA y Q-learning, lograron encontrar soluciones efectivas en una cantidad de episodios similar, aunque la aleatoriedad inherente a los entornos estocásticos impactó claramente sus curvas de aprendizaje. Esta aleatoriedad introduce una variabilidad en las recompensas y trayectorias que los algoritmos deben aprender a navegar.
+\vspace*{12pt}
+
+\noindent En particular, Q-learning, que es un algoritmo off-policy, tiende a verse más afectado por esta aleatoriedad. Al aprender una política óptima mientras explora otras opciones, la variabilidad en los resultados de las acciones puede llevar a una adaptación más lenta. Por otro lado, SARSA, siendo un algoritmo on-policy, aprende directamente de la política actual que está siguiendo, lo que le permite adaptarse más rápidamente a los cambios y variaciones del entorno. Esto significa que SARSA puede responder de manera más efectiva a la aleatoriedad en los movimientos, ajustando su política de aprendizaje de forma continua y coherente con la experiencia directa.
+\vspace*{12pt}
+
+\noindent Esta diferencia en la adaptabilidad ante la aleatoriedad subraya la importancia de elegir el algoritmo adecuado en función de las características específicas del entorno en el que se va a operar. Mientras que Q-learning busca la solución óptima sin considerar la política actual, SARSA integra la experiencia real en su proceso de aprendizaje, lo que puede ser ventajoso en entornos donde la previsibilidad no está garantizada.
+
+\newpage
+\section*{Pregunta 3}
+
+\noindent Se mostraran los resultados entre Q-learning y Double Q-learning para Map2, usando \textbf{gamma} = 1. Primero en un ambiente determinístico y luego en un ambiente estocástico. \\
+
+
+\indent\textbf{Q-learning determinístico vs Double Q-learning determinístico}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/QlearningModified2g1.png}
+	\caption{Resultados Q-learning determinístico}
+	\label{fig:map2_qlearning_modified23}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/DoubleQlearningg1.png}
+	\caption{Resultados Double Q-learning determinístico}
+	\label{fig:map2_double_qlearning_modified}
+\end{figure}
+
+\newpage
+
+\indent\textbf{Q-learning estocástico vs Double Q-learning estocástico}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/QlearningStochastic2g1.png}
+	\caption{Resultados Q-learning estocástico}
+	\label{fig:map2_qlearning_stochastic2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/DoubleQlearningStochastic2g1.png}
+	\caption{Resultados Double Q-learning estocástico}
+	\label{fig:map2_double_qlearning_stochastic}
+\end{figure}
+
+\newpage
+\noindent En un entorno determinístico, Double Q-learning no mostró una mejora significativa en comparación con Q-learning. Esto se debe a que en un entorno determinístico, Q-learning ya puede aprender la política óptima sin sobrestimar los valores de acción. \\
+\vspace*{12pt}
+
+\noindent Por otro lado, en un entorno estocástico, Double Q-learning mostró una mejora significativa en comparación con Q-learning. Esto se debe a que en un entorno estocástico, Q-learning sobrestima los valores de acción, lo que puede llevar a una política subóptima. Double Q-learning puede evitar este problema, ya que utiliza dos funciones de valor para estimar y reducir la sobreestimación. \\
+
+\newpage
+\section*{Pregunta 4}
+
+\noindent Se comparara el desempeño de SARSA y Q-learning originales a la version con \textbf{eligibility traces} para Map2, usando \textbf{gamma} = 1 y \textbf{lambda} = 0.5. En un ambiente estocástico. \\
+
+\indent\textbf{SARSA vs SARSA con eligibility traces}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/SarsaStochastic2g1.png}
+	\caption{Resultados SARSA estocástico}
+	\label{fig:map2_sarsa_stochastic2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/SarsaEligibilityStochastic2g1.png}
+	\caption{Resultados SARSA con eligibility traces estocástico}
+	\label{fig:map2_sarsa_eligibility_stochastic}
+\end{figure}
+
+\newpage
+\indent\textbf{Q-learning vs Q-learning con eligibility traces}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/QlearningStochastic2g1.png}
+	\caption{Resultados Q-learning estocástico}
+	\label{fig:map2_qlearning_stochastic3}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/QlearningEligibilityStochastic2g1.png}
+	\caption{Resultados Q-learning con eligibility traces estocástico}
+	\label{fig:map2_qlearning_eligibility_stochastic}
+\end{figure}
+
+\newpage
+\noindent En ambos casos, el rendimiento de los algoritmos SARSA y Q-learning se vio afectado negativamente con la introducción de trazas de elegibilidad. En el caso de SARSA, a pesar del impacto en el rendimiento general, el algoritmo aún logra alcanzar el objetivo de manera relativamente consistente y rápida. Esta capacidad podría atribuirse a su naturaleza on-policy, que le permite ajustar mejor su política a la experiencia directa y reciente, incluso con la complejidad añadida de las trazas de elegibilidad.
+\vspace*{12pt}
+
+\noindent Por otro lado, Q-learning, siendo un algoritmo off-policy, parece tener dificultades significativas en este escenario. La combinación de aprendizaje off-policy con trazas de elegibilidad podría estar llevando al algoritmo a una especie de paradoja de decisión, donde el deseo de optimizar recompensas a largo plazo lo aleja del objetivo. 
+
+
+
+% FIN DEL DOCUMENTO
+\end{document}

@@ -1,0 +1,31 @@
+\begin{thebibliography}{1}
+  \providecommand\backrefparscanfalse{}
+  \providecommand\backrefparscantrue{}
+  \providecommand\backrefprint{}
+
+\backrefparscanfalse
+\bibitem{template}
+Pizarro, P., ``Template informe en \latex,'' 2016-2021, \href{https://latex.ppizarror.com/informe}{\nolinkurl{\detokenize{https://latex.ppizarror.com/informe}}}.
+\backrefprint\backrefparscantrue
+
+\backrefparscanfalse
+\bibitem{overleaf}
+Overleaf, ``Uno de los mejores editores online para \latex, renovado con su versión 2.0,'' 2021, \href{https://es.overleaf.com/}{\nolinkurl{\detokenize{https://es.overleaf.com/}}}.
+\backrefprint\backrefparscantrue
+
+\backrefparscanfalse
+\bibitem{excel2latex}
+Excel2Latex, ``Plugin para hacer tablas con excel,'' 2017, \href{https://www.ctan.org/tex-archive/support/excel2latex/}{\nolinkurl{\detokenize{https://www.ctan.org/tex-archive/support/excel2latex/}}}.
+\backrefprint\backrefparscantrue
+
+\backrefparscanfalse
+\bibitem{tablesgenerator}
+Generator, T., ``Creador de tablas online para \latex,'' 2021, \href{https://www.tablesgenerator.com}{\nolinkurl{\detokenize{https://www.tablesgenerator.com}}}.
+\backrefprint\backrefparscantrue
+
+\backrefparscanfalse
+\bibitem{einstein}
+Einstein, A., ``{Zur Elektrodynamik bewegter K{\"o}rper}. ({German}) [{On} the electrodynamics of moving bodies],'' { Annalen der Physik}, vol.~322, no.~10, pp.~891--921, 1905, \href{https://dx.doi.org/https://dx.doi.org/10.1002/andp.19053221004}{\nolinkurl{doi:\detokenize{https://dx.doi.org/10.1002/andp.19053221004}}}.
+\backrefprint\backrefparscantrue
+
+\end{thebibliography}

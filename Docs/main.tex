@@ -16,13 +16,13 @@
 ]{article}
 
 % INFORMACIÓN DEL DOCUMENTO
-\def\documenttitle {Tarea 1}
-\def\documentsubtitle {GridWorld}
-\def\documentsubject {Aprendizaje por Refuerzo - GridWorld}
+\def\documenttitle {Proyecto 2}
+\def\documentsubtitle {Multihebra Sincronización}
+\def\documentsubject {Programación multihebra y mecanismos de sincronización}
 
-\def\documentauthor {Artigues}
-\def\coursename {Aprendizaje por Refuerzo}
-\def\coursecode {503650}
+\def\documentauthor {Artigues & Meza & Soto}
+\def\coursename {Sistemas Operativos}
+\def\coursecode {503308}
 
 \def\universityname {Universidad de Concepción}
 \def\universityfaculty {Facultad de Ingeniería}
@@ -34,13 +34,15 @@
 % INTEGRANTES, PROFESORES Y FECHAS
 \def\authortable {
 	\begin{tabular}{ll}
-		Integrante:
+		Integrantes:
 		& \begin{tabular}[t]{l}
 			Roberto Felipe Artigues Escobar \\
+			Emilio Juan Meza Quiroz \\
+			Nicolas Eduardo Soto Soto
 		\end{tabular} \\ & \\
-		Profesor:
+		Profesora:
 		& \begin{tabular}[t]{l}
-			Julio Godoy
+			Cecilia Paola Hernandez Rivas
 		\end{tabular} \\
 		% Auxiliar:
 		% & \begin{tabular}[t]{l}
@@ -54,7 +56,7 @@
 		% \multicolumn{2}{l}{Ayudante de laboratorio: Ayudante 1} \\
 		& \\
 		% \multicolumn{2}{l}{Fecha de realización: \today} \\
-		\multicolumn{2}{l}{Fecha de entrega: 12 de Noviembre de 2023} \\
+		\multicolumn{2}{l}{Fecha de entrega: 24 de Noviembre de 2023} \\
 		\multicolumn{2}{l}{\universitylocation}
 	\end{tabular}
 }
@@ -106,267 +108,64 @@
 
 % ======================= INICIO DEL DOCUMENTO =======================
 
-\section*{Instrucciones de ejecución del código}
+\section*{Detalle de la Implementación}
 
-Todo el código correspondiente a la tarea se encuentra en la carpeta \textbf{GridWorldEnvs}. Paso por paso se tiene que hacer lo siguiente:
-
-\begin{enumerate}
-	\item Abrir una terminal en la carpeta \textbf{GridWorldEnvs}.
-	\item Ejecutar el comando "\textbf{pip install -e .}" \space para instalar las dependencias.
-	\item Ejecutar el comando "\textbf{python tarea1.py}" \space para ejecutar el código.
-\end{enumerate}
-
-\noindent La razón por la cual se incluye la carpeta completa de \textbf{GridWorldEnvs} es porque se modificaron varios archivos de la librería original. \\
-
-\noindent Al final del código hay varias secciones comentadas, las cuales se pueden descomentar para ejecutar los experimentos requeridos para responder cada pregunta. \\
-
+\noindent Este proyecto se ha implementado con el objetivo de analizar y comparar dos métodos distintos de sincronización en programación multihebra:
+ el uso de semáforos y el uso de mutex combinado con variables de condición. 
 \vspace*{12pt}
-\hrule height 0.1pt 
-\vspace*{20pt}
 
-\noindent También se incluye el archivo \textbf{plotter.py} para graficar los resultados obtenidos. Para ejecutarlo, se debe hacer lo siguiente:
+\noindent El programa está escrito en C++ y hace uso extensivo de las bibliotecas estándar, incluyendo \texttt{<thread>}, \texttt{<mutex>}, \texttt{<semaphore>}, y \texttt{<filesystem>}, para gestionar hilos, sincronización y operaciones de archivos.
 
+\vspace*{8pt}
+\noindent El flujo de trabajo del programa es el siguiente:
 \begin{enumerate}
-	\item Descargar matplotlib con el comando "\textbf{pip install matplotlib}".
-	\item Ejecutar el comando "\textbf{python plotter.py}" \space para obtener los gráficos.
+    \item \textbf{Lectura de Parámetros}: El programa comienza leyendo los parámetros de entrada que incluyen el directorio de los archivos de genomas, el valor umbral del contenido genético CG y el modo de sincronización (semaforos o mutex).
+    \item \textbf{Procesamiento Multihebra}: Para cada archivo en el directorio especificado, se crea un hilo que procesa el archivo de manera independiente. Esto implica calcular el contenido genético CG de todo el archivo.
+    \item \textbf{Sincronización y Almacenamiento en Cola}: Dependiendo del modo seleccionado, el programa utiliza semáforos o mutex con variables de condición para controlar el acceso a la cola compartida. Si el contenido genético CG de un archivo supera el umbral, su nombre se almacena en la cola.
+    \begin{itemize}
+        \item En el modo de semáforos, se usa \texttt{std::counting\_semaphore} para asegurar que solo un hilo a la vez pueda acceder a la cola.
+        \item En el modo de mutex, se emplea \texttt{std::mutex} junto con \texttt{std::condition\_variable} para una gestión segura de hilos que acceden o modifican la cola.
+    \end{itemize}
+    \item \textbf{Salida}: Una vez que todos los hilos han terminado su ejecución, el programa procede a vaciar la cola compartida, imprimiendo los nombres de los archivos que cumplen con el criterio del umbral del contenido genético CG.
 \end{enumerate}
 
-\noindent Los gráficos se crean usando los archivos de rewards en la carpeta \textbf{GridWorldEnvs/Rewards}. Se tiene que especificar el archivo a usar en el código del programa. \\
-
 \newpage
-\section*{Pregunta 1}
+\section*{Evaluación Experimental}
+\noindent Para obtener los resultados se utilizó Linux en WSL2. Se realizaron 15 ejecuciones para ambos modos de sincronización con 10 archivos de genomas y se obtuvo su promedio. 
+\\ Los comandos utilizados para ejecutar las pruebas fueron:
 
-\noindent A continuación se muestran los resultados obtenidos con SARSA y Q-learning para el Map1. 
-\\ \\ 
-\indent{\textbf{Resultados con Map1:}}
+\begin{verbatim}
+/usr/bin/time -v ./main.exe Genomas 0.6 1
+/usr/bin/time -v ./main.exe Genomas 0.6 2
+\end{verbatim}
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.96\textwidth]{img/SarsaDefault1.png}
-	\caption{Resultados con SARSA para Map1}
-	\label{fig:map1_sarsa}
-\end{figure}
+\vspace*{5pt}
+\noindent Los resultados se muestran en la siguiente tabla:
+\vspace*{2pt}
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.96\textwidth]{img/QlearningDefault1.png}
-	\caption{Resultados con Q-learning para Map1}
-	\label{fig:map1_qlearning}
-\end{figure}
-
-
-\newpage
-\indent{\textbf{Resultados con Map2:}}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{img/SarsaDefault2.png}
-	\caption{Resultados con SARSA para Map2}
-	\label{fig:map2_sarsa}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{img/QlearningDefault2.png}
-	\caption{Resultados con Q-learning para Map2}
-	\label{fig:map2_qlearning}
-\end{figure}
-
-\noindent Con los parámetros originales no es posible que el agente aprenda a llegar al objetivo en Map2, ya que el agente se queda dando vueltas en el mapa sin llegar al objetivo. \\
-
-
-\indent{\textbf{Resultados con Map2 y parametros modificados:}}
-\\
-
-\noindent Los valores que se utilizaron en los parámetros para los resultados de la Figura \ref{fig:map2_sarsa_modified} y la Figura \ref{fig:map2_qlearning_modified} se muestran en la Tabla \ref{tab:my-table}.
-\\
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \rowcolor[HTML]{C0C0C0} 
-        \textbf{Parámetro} & \textbf{Original} & \multicolumn{2}{c|}{\textbf{Modificado}} \\ \hline
-        \textbf{MAX\_STEPS} & 100 & \multicolumn{2}{c|}{200} \\ \hline
-        \textbf{LEARNING\_RATE} & 0.2 & \multicolumn{2}{c|}{0.1} \\ \hline
-        \textbf{GAMMA} & 0.9 & 0.95 & 1 \\ \hline
-        \textbf{EPSILON} & 1 & \multicolumn{2}{c|}{1} \\ \hline
-    \end{tabular}
-    \caption{Valores de parámetros utilizados}
-    \label{tab:my-table}
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Modo} & \textbf{Tiempo (s)} & \textbf{RAM (KB)} \\ \hline
+Semáforo & 1.136 & 4291.2 \\ \hline
+Mutex & 1.152 & 4342.4 \\ \hline
+\end{tabular}
+\caption{Comparación de tiempo y uso de memoria}
+\label{tab:comparacion}
 \end{table}
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{img/SarsaModified2g095.png}
-	\caption{Resultados con SARSA para Map2 con gamma = 0.95}
-	\label{fig:map2_sarsa_modified}
-\end{figure}
+\section*{Interpretación de Resultados}
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{img/QlearningModified2g095.png}
-	\caption{Resultados con Q-learning para Map2 con gamma = 0.95}
-	\label{fig:map2_qlearning_modified}
-\end{figure}
+\noindent Los resultados obtenidos de la evaluación experimental revelan diferencias mínimas en el rendimiento entre los dos métodos de sincronización. En términos de tiempo de ejecución, el modo semáforo registró un promedio de 1.136 segundos, mientras que el modo mutex mostró un promedio ligeramente superior de 1.152 segundos. Esta pequeña diferencia sugiere que ambos métodos son casi equivalentes en eficiencia de tiempo para la tarea dada.
+\vspace*{10pt}
 
-\noindent Al menos SARSA no siempre encontraba la solución óptima. En cambio, Q-learning siempre encontraba la solución óptima usando los parámetros modificados. \\
+\noindent En cuanto al uso de memoria, el modo semáforo utilizó en promedio 4291.2 KB, frente a los 4342.4 KB del modo mutex. Aunque la diferencia es igualmente pequeña, indica una ligera ventaja en eficiencia de memoria para el modo semáforo.
+\vspace*{10pt}
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{img/SarsaModified2g1.png}
-	\caption{Resultados con SARSA para Map2 con gamma = 1}
-	\label{fig:map2_sarsa_modified2}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{img/QlearningModified2g1.png}
-	\caption{Resultados con Q-learning para Map2 con gamma = 1}
-	\label{fig:map2_qlearning_modified2}
-\end{figure}
-
-\noindent La modificación de los parámetros tuvo un impacto significativo en el desempeño de los algoritmos SARSA y Q-learning en el Map2. Con un valor de \textbf{gamma} igual a 0.95, se observó que SARSA no siempre encontraba la solución óptima. Por otro lado, Q-learning mostró una mejora notable, encontrando consistentemente la solución óptima.
-
-\vspace*{12pt}
-\noindent Al incrementar el valor de \textbf{gamma} a 1, se intensifica la importancia de las recompensas futuras. Por lo que ambos algoritmos deciden tomar el camino más corto hacia el objetivo, sin importar las recompensas que se obtengan en el camino. \\
-
-\newpage
-
-\section*{Pregunta 2}
-
-Para el entrenamiento, se volvieron a utilizar los parámetros modificados, específicamente utilizando \textbf{gamma} = 1. \\
-
-\indent\textbf{Q-learning determinístico vs estocástico}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.95\textwidth]{img/QlearningModified2g1.png}
-	\caption{Resultados Q-learning determinístico para Map2 con gamma = 1}
-	\label{fig:map2_qlearning_modified22}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.95\textwidth]{img/QlearningStochastic2g1.png}
-	\caption{Resultados Q-learning estocástico para Map2 con gamma = 1}
-	\label{fig:map2_qlearning_stochastic}
-\end{figure}
+\noindent En conclusión, mientras que existen diferencias leves en tiempo y uso de memoria entre los dos modos, estos son marginalmente significativos, indicando que ambos enfoques son prácticamente comparables en términos de rendimiento para el procesamiento de archivos de genomas en el contexto del experimento.
 
 
-\indent\textbf{SARSA determinístico vs estocástico}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.95\textwidth]{img/SarsaModified2g1.png}
-	\caption{Resultados SARSA determinístico para Map2 con gamma = 1}
-	\label{fig:map2_sarsa_modified22}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.95\textwidth]{img/SarsaStochastic2g1.png}
-	\caption{Resultados SARSA estocástico para Map2 con gamma = 1}
-	\label{fig:map2_sarsa_stochastic}
-\end{figure}
-
-\newpage
-\noindent Ambos algoritmos, SARSA y Q-learning, lograron encontrar soluciones efectivas en una cantidad de episodios similar, aunque la aleatoriedad inherente a los entornos estocásticos impactó claramente sus curvas de aprendizaje. Esta aleatoriedad introduce una variabilidad en las recompensas y trayectorias que los algoritmos deben aprender a navegar.
-\vspace*{12pt}
-
-\noindent En particular, Q-learning, que es un algoritmo off-policy, tiende a verse más afectado por esta aleatoriedad. Al aprender una política óptima mientras explora otras opciones, la variabilidad en los resultados de las acciones puede llevar a una adaptación más lenta. Por otro lado, SARSA, siendo un algoritmo on-policy, aprende directamente de la política actual que está siguiendo, lo que le permite adaptarse más rápidamente a los cambios y variaciones del entorno. Esto significa que SARSA puede responder de manera más efectiva a la aleatoriedad en los movimientos, ajustando su política de aprendizaje de forma continua y coherente con la experiencia directa.
-\vspace*{12pt}
-
-\noindent Esta diferencia en la adaptabilidad ante la aleatoriedad subraya la importancia de elegir el algoritmo adecuado en función de las características específicas del entorno en el que se va a operar. Mientras que Q-learning busca la solución óptima sin considerar la política actual, SARSA integra la experiencia real en su proceso de aprendizaje, lo que puede ser ventajoso en entornos donde la previsibilidad no está garantizada.
-
-\newpage
-\section*{Pregunta 3}
-
-\noindent Se mostraran los resultados entre Q-learning y Double Q-learning para Map2, usando \textbf{gamma} = 1. Primero en un ambiente determinístico y luego en un ambiente estocástico. \\
-
-
-\indent\textbf{Q-learning determinístico vs Double Q-learning determinístico}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.95\textwidth]{img/QlearningModified2g1.png}
-	\caption{Resultados Q-learning determinístico}
-	\label{fig:map2_qlearning_modified23}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.95\textwidth]{img/DoubleQlearningg1.png}
-	\caption{Resultados Double Q-learning determinístico}
-	\label{fig:map2_double_qlearning_modified}
-\end{figure}
-
-\newpage
-
-\indent\textbf{Q-learning estocástico vs Double Q-learning estocástico}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.95\textwidth]{img/QlearningStochastic2g1.png}
-	\caption{Resultados Q-learning estocástico}
-	\label{fig:map2_qlearning_stochastic2}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.95\textwidth]{img/DoubleQlearningStochastic2g1.png}
-	\caption{Resultados Double Q-learning estocástico}
-	\label{fig:map2_double_qlearning_stochastic}
-\end{figure}
-
-\newpage
-\noindent En un entorno determinístico, Double Q-learning no mostró una mejora significativa en comparación con Q-learning. Esto se debe a que en un entorno determinístico, Q-learning ya puede aprender la política óptima sin sobrestimar los valores de acción. \\
-\vspace*{12pt}
-
-\noindent Por otro lado, en un entorno estocástico, Double Q-learning mostró una mejora significativa en comparación con Q-learning. Esto se debe a que en un entorno estocástico, Q-learning sobrestima los valores de acción, lo que puede llevar a una política subóptima. Double Q-learning puede evitar este problema, ya que utiliza dos funciones de valor para estimar y reducir la sobreestimación. \\
-
-\newpage
-\section*{Pregunta 4}
-
-\noindent Se comparara el desempeño de SARSA y Q-learning originales a la version con \textbf{eligibility traces} para Map2, usando \textbf{gamma} = 1 y \textbf{lambda} = 0.5. En un ambiente estocástico. \\
-
-\indent\textbf{SARSA vs SARSA con eligibility traces}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.95\textwidth]{img/SarsaStochastic2g1.png}
-	\caption{Resultados SARSA estocástico}
-	\label{fig:map2_sarsa_stochastic2}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.95\textwidth]{img/SarsaEligibilityStochastic2g1.png}
-	\caption{Resultados SARSA con eligibility traces estocástico}
-	\label{fig:map2_sarsa_eligibility_stochastic}
-\end{figure}
-
-\newpage
-\indent\textbf{Q-learning vs Q-learning con eligibility traces}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.95\textwidth]{img/QlearningStochastic2g1.png}
-	\caption{Resultados Q-learning estocástico}
-	\label{fig:map2_qlearning_stochastic3}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.95\textwidth]{img/QlearningEligibilityStochastic2g1.png}
-	\caption{Resultados Q-learning con eligibility traces estocástico}
-	\label{fig:map2_qlearning_eligibility_stochastic}
-\end{figure}
-
-\newpage
-\noindent En ambos casos, el rendimiento de los algoritmos SARSA y Q-learning se vio afectado negativamente con la introducción de trazas de elegibilidad. En el caso de SARSA, a pesar del impacto en el rendimiento general, el algoritmo aún logra alcanzar el objetivo de manera relativamente consistente y rápida. Esta capacidad podría atribuirse a su naturaleza on-policy, que le permite ajustar mejor su política a la experiencia directa y reciente, incluso con la complejidad añadida de las trazas de elegibilidad.
-\vspace*{12pt}
-
-\noindent Por otro lado, Q-learning, siendo un algoritmo off-policy, parece tener dificultades significativas en este escenario. La combinación de aprendizaje off-policy con trazas de elegibilidad podría estar llevando al algoritmo a una especie de paradoja de decisión, donde el deseo de optimizar recompensas a largo plazo lo aleja del objetivo. 
 
 
 
